@@ -16,6 +16,7 @@ Vue.use(VueAwesomeSwiper);
 fastClick.attach(document.body);
 Vue.prototype.$axios = axios;
 Vue.prototype.$bus = new Vue();
+//--
 
 new Vue({
   store,
