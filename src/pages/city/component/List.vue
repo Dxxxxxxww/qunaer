@@ -71,39 +71,39 @@ export default {
 
 .border-topbottom
   &:before
-    border-color #cccccc
+    border-color: #cccccc
   &:after
-    border-color #cccccc
+    border-color: #cccccc
 .border-bottom
   &:before
-    border-color #cccccc
+    border-color: #cccccc
 .container
-  position absolute
-  top 1.58rem
-  right 0
-  bottom 0
-  left 0
-  overflow hidden
+  position: absolute
+  top: 1.58rem
+  right: 0
+  bottom: 0
+  left: 0
+  overflow: hidden
   .title
-    line-height 0.54rem
-    padding-left 0.2rem
-    font-size 0.26rem
-    color #666666
-    background-color #eeeeee
+    line-height: 0.54rem
+    padding-left: 0.2rem
+    font-size: 0.26rem
+    color: #666666
+    background-color: #eeeeee
   .button-list
-    overflow hidden
-    padding 0.1rem 0.6rem 0.1rem 0.1rem
+    overflow: hidden
+    padding: 0.1rem 0.6rem 0.1rem 0.1rem
     .button
-      float left
-      width 30%
-      margin 0.1rem
-      padding 0.1rem 0
-      border 0.02rem solid #cccccc
-      border-radius 0.06rem
-      text-align center
-      background-color #ffffff
+      float: left
+      width: 30%
+      margin: 0.1rem
+      padding: 0.1rem 0
+      border: 0.02rem solid #cccccc
+      border-radius: 0.06rem
+      text-align: center
+      background-color: #ffffff
   .item-list
     .item
-      line-height 0.76rem
-      padding-left 0.2rem
+      line-height: 0.76rem
+      padding-left: 0.2rem
 </style>

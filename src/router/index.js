@@ -9,16 +9,18 @@ export default new Router({
   routes: [{
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import('../pages/home/Home')
   }, {
     path: '/city',
     name: 'City',
-    component: City
+    component: () => import('../pages/city/City')
   }, {
     path: '/detail/:id',
     name: 'Detail',
-    props: (route)=>({idid: route.params.id}),
-    component: Detail
+    props: (route) => ({
+      idid: route.params.id
+    }),
+    component: () => import('../pages/detail/Detail')
   }],
   // eslint-disable-next-line no-unused-vars
   scrollBehavior(to, from, savedPosition) {

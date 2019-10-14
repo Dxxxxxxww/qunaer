@@ -54,7 +54,6 @@ export default {
       //     }
       //   })
       //   .then(this.onGetDetailSucc);
-
       this.$axios
         .get("/api/detail.json", {
           params: {
