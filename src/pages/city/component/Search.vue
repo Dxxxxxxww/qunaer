@@ -2,84 +2,101 @@
   <div>
     <div class="search">
       <input
-        v-model="keyword"
+        v-model="keywordRef"
         class="search-ipt"
         type="text"
         placeholder="输入城市名或拼音"
-        @focus="onFocus"
-        @blur="onBlur"
       />
     </div>
-    <div class="search-content" ref="list" v-show="keyword">
+    <div class="search-content" ref="wrapperRef" v-show="keywordRef">
       <ul>
         <li
           class="item border-bottom"
-          v-for="item of list"
+          v-for="item of listRef"
           :key="item.id"
           @click="onChangeCity(item.name)"
-        >{{item.name}}</li>
-        <li class="item border-bottom" v-show="hasNoData">没有正确匹配的数据</li>
+        >
+          {{ item.name }}
+        </li>
+        <li class="item border-bottom" v-show="hasNoDataRef">
+          没有正确匹配的数据
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
-import { throttle } from "../../../utils/utils";
-import BScroll from "better-scroll";
-import { mapMutations } from "vuex";
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { ref, computed, watch, onMounted } from 'vue'
+import { throttle } from '@/utils/utils'
+import BScroll from 'better-scroll'
 export default {
-  name: "CitySearch",
+  name: 'CitySearch',
   props: {
-    cities: Object
+    cities: Object,
   },
-  data() {
-    return {
-      keyword: "",
-      list: []
-    };
+  setup(props) {
+    const { wrapperRef } = useScrollLogic()
+    const { keywordRef, listRef, hasNoDataRef } = useSearchLogic(props)
+    const { onChangeCity } = useCityLogic(keywordRef)
+    return { keywordRef, listRef, hasNoDataRef, wrapperRef, onChangeCity }
   },
-  computed: {
-    hasNoData() {
-      return !this.list.length;
-    }
-  },
-  watch: {
-    keyword: throttle(function() {
-      if (!this.keyword.length) {
-        this.list = [];
-        return;
+}
+
+function useScrollLogic() {
+  const wrapperRef = ref(null)
+
+  onMounted(() => {
+    new BScroll(wrapperRef.value, { click: true })
+  })
+
+  return { wrapperRef }
+}
+
+function useSearchLogic(props) {
+  const keywordRef = ref('')
+  const listRef = ref([])
+  const hasNoDataRef = computed(() => !listRef.value.length)
+
+  watch(
+    keywordRef,
+    throttle(() => {
+      if (!keywordRef.value.length) {
+        listRef.value = []
+        return
       }
-      const list = [];
-      for (const k in this.cities) {
-        for (const v of this.cities[k]) {
-          if (v.spell.includes(this.keyword) || v.name.includes(this.keyword)) {
-            list.push(v);
+      const list = []
+      for (const k in props.cities) {
+        for (const v of props.cities[k]) {
+          if (
+            v.spell.includes(keywordRef.value) ||
+            v.name.includes(keywordRef.value)
+          ) {
+            list.push(v)
           }
         }
       }
-      this.list = list;
+      listRef.value = list
     }, 100)
-  },
-  mounted() {
-    this.scroll = new BScroll(this.$refs.list, { click: true });
-  },
-  methods: {
-    onChangeCity(city) {
-      // this.$store.commit("changeCity", city);
-      this.changeCity(city);
-      this.keyword = "";
-      this.$router.push("/");
-    },
-    onFocus() {
-      this.focusSearch(true);
-    },
-    onBlur() {
-      this.blurSearch(false);
-    },
-    ...mapMutations(["changeCity", "focusSearch", "blurSearch"])
+  )
+
+  return { keywordRef, listRef, hasNoDataRef }
+}
+
+function useCityLogic(keywordRef) {
+  const store = useStore()
+  const router = useRouter()
+
+  function onChangeCity(city) {
+    store.commit('city/changeCity', city)
+    keywordRef.value = ''
+    router.push('/')
   }
-};
+
+  return { onChangeCity }
+}
 </script>
 
 <style lang="stylus" scoped>

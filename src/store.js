@@ -1,11 +1,8 @@
-import Vue from 'vue';
 import Vuex from 'vuex';
 import state from './state';
 import mutations from './mutations';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default Vuex.createStore({
   state,
   // action: {
   //   changeCity(ctx, city) {

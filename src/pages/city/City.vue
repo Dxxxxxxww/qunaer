@@ -8,41 +8,48 @@
 </template>
 
 <script>
-import CityHeader from "./component/Header";
-import CitySearch from "./component/Search";
-import CityList from "./component/List";
-import CityAlphabet from "./component/Alphabet";
+import { reactive, onMounted } from 'vue'
+import axios from 'axios'
+import CityHeader from './component/Header'
+import CitySearch from './component/Search'
+import CityList from './component/List'
+import CityAlphabet from './component/Alphabet'
+
 export default {
-  name: "City",
+  name: 'City',
   components: {
     CityHeader,
     CitySearch,
     CityList,
-    CityAlphabet
+    CityAlphabet,
   },
-  data() {
-    return {
-      cities: {},
-      hotCities: []
-    };
+  setup() {
+    const { data } = useCityLogic()
+    return data
   },
-  methods: {
-    getCityInfo() {
-      this.$axios.get("/api/city.json").then(this.getCityInfoSucc);
-    },
-    getCityInfoSucc(res) {
-      res = res.data;
-      if (res.ret) {
-        const data = res.data;
-        this.cities = data.cities;
-        this.hotCities = data.hotCities;
-      }
+}
+/**
+ * @description 处理城市逻辑
+ */
+function useCityLogic() {
+  const data = reactive({
+    cities: {},
+    hotCities: [],
+  })
+
+  async function getCityInfo() {
+    let res = await axios.get('/api/city.json')
+    res = res.data
+    if (res.ret) {
+      const result = res.data
+      data.cities = result.cities
+      data.hotCities = result.hotCities
     }
-  },
-  mounted() {
-    this.getCityInfo();
   }
-};
+  onMounted(getCityInfo)
+
+  return { data }
+}
 </script>
 
 <style lang="stylus" scoped></style>

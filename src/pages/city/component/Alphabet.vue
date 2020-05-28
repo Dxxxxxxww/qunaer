@@ -1,68 +1,71 @@
 <template>
-  <ul class="item-list" v-show="!isFocus">
+  <ul class="item-list">
     <li
       class="item"
-      v-for="item in lettes"
+      v-for="item in letters"
       :key="item"
-      :ref="item"
+      :ref="(ele) => (elems[item] = ele)"
       @click="itemClick"
-      @touchstart.prevent="onTouchStart"
+      @touchstart="onTouchStart"
       @touchmove="onTouchMove"
       @touchend="onTouchEnd"
-    >{{item}}</li>
+    >
+      {{ item }}
+    </li>
   </ul>
 </template>
 
 <script>
-import { throttle } from "../../../utils/utils";
-import { mapState } from "vuex";
+import { ref, computed, onUpdated } from 'vue'
+import { throttle } from '@/utils/utils'
+import { useStore } from 'vuex'
+
 export default {
-  name: "CityAlphabet",
+  name: 'CityAlphabet',
   props: {
-    cities: Object
+    cities: Object,
   },
-  computed: {
-    lettes() {
-      const arr = [];
-      for (const k in this.cities) {
-        arr.push(k);
+  setup(props) {
+    const topSearchBoxHeight = 79
+    const letterHeight = 20
+    let flag = false
+    let startY = 0
+    const elems = ref([])
+    // console.log('props', props) // props 是一个 reactive 不是 ref
+    const letters = computed(() => {
+      const arr = []
+      for (const k in props.cities) {
+        arr.push(k)
       }
-      return arr;
-    },
-    ...mapState(["isFocus"])
-  },
-  data() {
-    return {
-      flag: false,
-      topSearchBoxHeight: 79,
-      letterHeight: 20,
-      startY: 0
-    };
-  },
-  updated() {
-    this.startY = this.$refs["A"][0].offsetTop;
-  },
-  methods: {
-    itemClick(e) {
-      this.$bus.$emit("city-item-change", e.target.innerText);
-    },
-    onTouchStart() {
-      this.flag = true;
-    },
-    onTouchMove: throttle(function(e) {
-      if (this.flag) {
-        const touchY = e.touches[0].clientY - this.topSearchBoxHeight;
-        const index = Math.floor((touchY - this.startY) / this.letterHeight);
-        if (index >= 0 && index < this.lettes.length) {
-          this.$bus.$emit("city-item-change", this.lettes[index]);
+      return arr
+    })
+    onUpdated(() => {
+      startY = elems.value['A'].offsetTop
+    })
+    const store = useStore()
+
+    function itemClick(e) {
+      store.commit('city/scrollTo', e.target.innerText)
+    }
+    function onTouchStart(e) {
+      flag = true
+    }
+    function onTouchEnd(e) {
+      flag = false
+    }
+    const onTouchMove = throttle(function(e) {
+      if (flag) {
+        const touchY = e.touches[0].clientY - topSearchBoxHeight
+        const index = Math.floor((touchY - startY) / letterHeight)
+        if (index >= 0 && index < letters.value.length) {
+          store.commit('city/scrollTo', letters.value[index])
         }
       }
-    }, 16),
-    onTouchEnd() {
-      this.flag = false;
-    }
-  }
-};
+    }, 20)
+
+    return { letters, elems, onTouchStart, onTouchMove, onTouchEnd, itemClick }
+  },
+}
 </script>
 
 <style lang="stylus" scoped>

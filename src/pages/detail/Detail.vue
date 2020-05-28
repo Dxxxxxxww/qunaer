@@ -1,6 +1,10 @@
 <template>
   <div>
-    <detail-banner :sightName="sightName" :bannerImg="bannerImg" :bannerImgs="gallaryImgs"></detail-banner>
+    <detail-banner
+      :sightName="sightName"
+      :bannerImg="bannerImg"
+      :bannerImgs="gallaryImgs"
+    ></detail-banner>
     <detail-header></detail-header>
     <detail-list :list="list"></detail-list>
     <!-- <button @click="changeUrl">change</button> -->
@@ -9,32 +13,33 @@
 </template>
 
 <script>
-import DetailBanner from "./components/Banner";
-import DetailHeader from "./components/Header";
-import DetailList from "./components/List";
+import axios from 'axios'
+import DetailBanner from './components/Banner'
+import DetailHeader from './components/Header'
+import DetailList from './components/List'
 export default {
-  name: "Detail",
+  name: 'Detail',
   components: {
     DetailBanner,
     DetailHeader,
-    DetailList
+    DetailList,
   },
   props: {
-    idid: String
+    idid: String,
   },
   data() {
     return {
-      sightName: "",
-      bannerImg: "",
+      sightName: '',
+      bannerImg: '',
       gallaryImgs: [],
-      list: []
-    };
+      list: [],
+    }
   },
   mounted() {
     // console.log("detail mounted");
     // console.log(this.$route.params);
-    console.log(this.idid);
-    this.onGetDetail();
+    console.log(this.idid)
+    this.onGetDetail()
   },
   // activated() {
   //   console.log("detail activated");
@@ -54,31 +59,31 @@ export default {
       //     }
       //   })
       //   .then(this.onGetDetailSucc);
-      this.$axios
-        .get("/api/detail.json", {
+      axios
+        .get('/api/detail.json', {
           params: {
-            id: this.idid
-          }
+            id: this.idid,
+          },
         })
-        .then(this.onGetDetailSucc);
+        .then(this.onGetDetailSucc)
     },
     onGetDetailSucc(res) {
-      console.log(res);
-      res = res.data;
+      console.log(res)
+      res = res.data
       if (res.ret && res.data) {
-        const data = res.data;
-        this.sightName = data.sightName;
-        this.bannerImg = data.bannerImg;
-        this.gallaryImgs = data.gallaryImgs;
-        this.list = data.categoryList;
+        const data = res.data
+        this.sightName = data.sightName
+        this.bannerImg = data.bannerImg
+        this.gallaryImgs = data.gallaryImgs
+        this.list = data.categoryList
       }
-    }
+    },
     // changeUrl() {
     //   let id = this.$route.params.id == "0001" ? "0002" : "0001";
     //   this.$router.push(`/detail/${id}`);
     // }
-  }
-};
+  },
+}
 </script>
 
 <style lang="stylus" scoped></style>

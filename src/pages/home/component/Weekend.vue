@@ -7,8 +7,8 @@
           <img class="item-img" :src="item.imgUrl" />
         </div>
         <div class="item-info">
-          <p class="item-title">{{item.title}}</p>
-          <p class="item-desc">{{item.desc}}</p>
+          <p class="item-title">{{ item.title }}</p>
+          <p class="item-desc">{{ item.desc }}</p>
         </div>
       </li>
     </ul>
@@ -17,19 +17,16 @@
 
 <script>
 export default {
-  name: "HomeWeekend",
+  name: 'HomeWeekend',
   props: {
     weekendList: {
       type: Array,
       default: function() {
-        return [];
-      }
-    }
+        return []
+      },
+    },
   },
-  data() {
-    return {};
-  }
-};
+}
 </script>
 
 <style lang="stylus" scoped>

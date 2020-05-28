@@ -6,7 +6,7 @@
           <div class="icon-img">
             <img class="icon-img-content" :src="item.imgUrl" />
           </div>
-          <p class="icon-desc">{{item.desc}}</p>
+          <p class="icon-desc">{{ item.desc }}</p>
         </div>
       </swiper-slide>
     </swiper>
@@ -14,32 +14,34 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+
 export default {
-  name: "HomeIcons",
+  name: 'HomeIcons',
   props: {
-    iconList: Array
+    iconList: Array,
   },
-  data() {
-    return {
-      swiperOption: {
-        autoplay: false
-      }
-    };
-  },
-  computed: {
-    pages() {
-      const pages = [];
-      this.iconList.forEach((v, i) => {
-        const page = Math.floor(i / 8);
-        if (!pages[page]) {
-          pages[page] = [];
-        }
-        pages[page].push(v);
-      });
-      return pages;
+  setup(props) {
+    // swiperOption 是一个配置数据，并不需要响应式
+    const swiperOption = {
+      autoplay: false,
     }
-  }
-};
+
+    const pages = computed(() => {
+      const pages = []
+      props.iconList.forEach((v, i) => {
+        const page = Math.floor(i / 8)
+        if (!pages[page]) {
+          pages[page] = []
+        }
+        pages[page].push(v)
+      })
+      return pages
+    })
+
+    return { swiperOption, pages }
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
