@@ -16,12 +16,13 @@
 </template>
 
 <script>
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 export default {
   name: 'HomeHeader',
   setup() {
     const store = useStore()
-    const city = store.state.city.city
+    const city = computed(() => store.state.city.city)
     return { city }
   },
 }

@@ -11,7 +11,7 @@
 <script>
 import axios from 'axios'
 import { useStore } from 'vuex'
-import { reactive, ref, onMounted, onActivated } from 'vue'
+import { reactive, ref, computed, onMounted, onActivated } from 'vue'
 import HomeHeader from './component/Header'
 import HomeSwiper from './component/Swiper'
 import HomeIcons from './component/Icons'
@@ -47,7 +47,7 @@ function useGetHome() {
   const recommendList = ref([])
   const weekendList = ref([])
   const store = useStore()
-  const city = store.state.city.city
+  const city = computed(() => store.state.city.city)
 
   onMounted(getHomeInfo)
 

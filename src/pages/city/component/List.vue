@@ -67,7 +67,8 @@ export default {
  * @description 城市逻辑
  */
 function useCityLogic(store, router) {
-  const city = store.state.city.city
+  const city = computed(() => store.state.city.city)
+  console.log(city)
   /**
    * @description 更改城市
    * @param {string} city 城市

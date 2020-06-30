@@ -8,10 +8,10 @@ try {
 
 const cityModule = {
   namespaced: true,
-  state: {
+  state: () => ({
     city: defaultCity,
     letter: '',
-  },
+  }),
   mutations: {
     changeCity(state, city) {
       state.city = city
